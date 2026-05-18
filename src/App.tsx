@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react'
 import { 
-  Newspaper, 
-  Calendar, 
-  ExternalLink,
-  Shield,
-  TrendingUp,
-  AlertCircle,
-  Search,
-  User,
-  ExternalLink as LinkIcon
+   Newspaper, 
+   Calendar, 
+   Shield,
+   TrendingUp,
+   AlertCircle,
+   Search,
+   User,
+   ExternalLink as LinkIcon
 } from 'lucide-react'
 
 interface Article {
@@ -234,18 +233,6 @@ export default function App() {
             </div>
             <span>Yug<span style={{ color: 'var(--accent-primary)' }}>Satya</span> News</span>
           </a>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <a 
-              href="https://test.yugsatya.com" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="btn-primary"
-              style={{ padding: '8px 18px', fontSize: '0.85rem', borderRadius: '12px' }}
-            >
-              Admin Portal <ExternalLink className="w-4 h-4" />
-            </a>
-          </div>
         </div>
       </nav>
 
