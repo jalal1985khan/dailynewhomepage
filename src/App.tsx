@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { 
   Newspaper, 
-  Key, 
   Calendar, 
   ExternalLink,
   Shield,
@@ -123,11 +122,11 @@ const CATEGORIES = [
   { id: 'sports', label: 'Sports' }
 ]
 
+const API_KEY = import.meta.env.VITE_NEWS_API_KEY || ''
+const BASE_URL = import.meta.env.VITE_NEWS_BASE_URL || 'https://newsapi.org/v2'
+const COUNTRY = import.meta.env.VITE_NEWS_COUNTRY || 'us'
+
 export default function App() {
-  const [apiKey, setApiKey] = useState<string>(() => localStorage.getItem('news_api_key') || import.meta.env.VITE_NEWS_API_KEY || '')
-  const [showKeyInput, setShowKeyInput] = useState<boolean>(false)
-  const [inputKey, setInputKey] = useState<string>('')
-  
   const [activeCategory, setActiveCategory] = useState<string>('general')
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [debouncedQuery, setDebouncedQuery] = useState<string>('')
@@ -160,7 +159,7 @@ export default function App() {
       setIsLoading(true)
       setErrorMsg(null)
 
-      if (!apiKey) {
+      if (!API_KEY) {
         // Load fallback cache if no API key is set
         setTimeout(() => {
           setArticles(CURATED_FALLBACK_NEWS[activeCategory] || CURATED_FALLBACK_NEWS['general'])
@@ -169,17 +168,14 @@ export default function App() {
         return
       }
 
-      const baseUrl = import.meta.env.VITE_NEWS_BASE_URL || 'https://newsapi.org/v2'
-      const country = import.meta.env.VITE_NEWS_COUNTRY || 'us'
-
       try {
         let targetUrl = ''
         if (debouncedQuery.trim()) {
           // Use 'everything' endpoint for search queries
-          targetUrl = `${baseUrl}/everything?q=${encodeURIComponent(debouncedQuery)}&language=en&sortBy=publishedAt&apiKey=${apiKey}`
+          targetUrl = `${BASE_URL}/everything?q=${encodeURIComponent(debouncedQuery)}&language=en&sortBy=publishedAt&apiKey=${API_KEY}`
         } else {
           // Use 'top-headlines' endpoint for standard categories
-          targetUrl = `${baseUrl}/top-headlines?category=${activeCategory === 'general' ? 'general' : activeCategory}&country=${country}&apiKey=${apiKey}`
+          targetUrl = `${BASE_URL}/top-headlines?category=${activeCategory === 'general' ? 'general' : activeCategory}&country=${COUNTRY}&apiKey=${API_KEY}`
         }
 
         const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`
@@ -208,23 +204,7 @@ export default function App() {
     }
 
     fetchNews()
-  }, [activeCategory, debouncedQuery, apiKey])
-
-  const handleSaveKey = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (inputKey.trim()) {
-      localStorage.setItem('news_api_key', inputKey.trim())
-      setApiKey(inputKey.trim())
-      setInputKey('')
-      setShowKeyInput(false)
-    }
-  }
-
-  const handleClearKey = () => {
-    localStorage.removeItem('news_api_key')
-    setApiKey('')
-    setInputKey('')
-  }
+  }, [activeCategory, debouncedQuery])
 
   const formatDate = (dateStr: string) => {
     try {
@@ -256,14 +236,6 @@ export default function App() {
           </a>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <button 
-              onClick={() => setShowKeyInput(!showKeyInput)}
-              className="btn-secondary"
-              style={{ padding: '8px 14px', fontSize: '0.85rem', borderRadius: '12px' }}
-              title="Configure NewsAPI credentials"
-            >
-              <Key className="w-4 h-4 text-indigo-400" /> API Settings
-            </button>
             <a 
               href="https://test.yugsatya.com" 
               target="_blank" 
@@ -276,63 +248,6 @@ export default function App() {
           </div>
         </div>
       </nav>
-
-      {/* API Key Modal Panel */}
-      {showKeyInput && (
-        <div 
-          className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200"
-          onClick={() => setShowKeyInput(false)}
-        >
-          <div 
-            className="glass-panel api-key-panel w-full max-w-md animate-in zoom-in-95 duration-200"
-            onClick={e => e.stopPropagation()}
-            style={{ padding: '32px' }}
-          >
-            <div className="api-key-header" style={{ marginBottom: '16px' }}>
-              <Key className="w-6 h-6 text-indigo-400" />
-              <h3 style={{ fontSize: '1.2rem', fontWeight: 700 }}>News Connection API Key</h3>
-            </div>
-            
-            {apiKey ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-                  Your portal is active using key: <code style={{ color: '#818cf8', background: 'rgba(255,255,255,0.05)', padding: '3px 8px', borderRadius: '6px' }}>••••••••{apiKey.slice(-6)}</code>
-                </p>
-                <div style={{ display: 'flex', gap: '12px' }}>
-                  <button onClick={handleClearKey} className="btn-secondary" style={{ flex: 1, borderRadius: '12px' }}>
-                    Reset Credentials
-                  </button>
-                  <button onClick={() => setShowKeyInput(false)} className="btn-primary" style={{ flex: 1, borderRadius: '12px' }}>
-                    Done
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <form onSubmit={handleSaveKey} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
-                  Enter your credentials from <a href="https://newsapi.org" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)', textDecoration: 'underline' }}>newsapi.org</a> to sync a live headlines feed.
-                </p>
-                <input 
-                  type="password" 
-                  placeholder="Paste NewsAPI API Key"
-                  value={inputKey}
-                  onChange={e => setInputKey(e.target.value)}
-                  className="api-key-input"
-                  required
-                />
-                <div style={{ display: 'flex', gap: '12px' }}>
-                  <button type="button" onClick={() => setShowKeyInput(false)} className="btn-secondary" style={{ flex: 1, borderRadius: '12px' }}>
-                    Cancel
-                  </button>
-                  <button type="submit" className="btn-primary" style={{ flex: 1, borderRadius: '12px' }}>
-                    Save & Load
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
-        </div>
-      )}
 
       {/* Main News Portal Container */}
       <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '120px 24px 40px', position: 'relative', zIndex: 10 }}>
