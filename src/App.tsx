@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { 
   Newspaper, 
-  Sparkles, 
   Key, 
-  PhoneCall, 
-  Layers, 
-  Globe, 
   Calendar, 
-  ArrowRight, 
   ExternalLink,
   Shield,
   TrendingUp,
-  Download,
-  AlertCircle
+  AlertCircle,
+  Search,
+  User,
+  ExternalLink as LinkIcon
 } from 'lucide-react'
 
 interface Article {
@@ -25,51 +22,51 @@ interface Article {
   author?: string
 }
 
-// Custom curated news fallbacks in case API key is empty or rate-limited
+// Curated fallbacks for a premium experience under any network conditions
 const CURATED_FALLBACK_NEWS: Record<string, Article[]> = {
   general: [
     {
-      title: "The Future of AI and Next-Gen Collaborative Platforms",
-      description: "How artificial intelligence and real-time WebRTC communications are reshaping enterprise workspace paradigms in 2026.",
-      url: "#",
-      urlToImage: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+      title: "The Next Phase of Global Decentralized Media & Real-Time Sync",
+      description: "A deep dive into how digital publishers are building ultra-fast platforms using client-side caching to serve millions of readers globally.",
+      url: "https://newsapi.org",
+      urlToImage: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=80",
       publishedAt: new Date(Date.now() - 3600000 * 2).toISOString(),
+      source: { name: "Media Pulse" },
+      author: "Elena Rostova"
+    },
+    {
+      title: "Next-Gen AI Collaborations Reshaping Enterprise Workspaces",
+      description: "How secure chat integrations and high-fidelity WebRTC channels are optimizing team logistics in the post-digital business era.",
+      url: "https://newsapi.org",
+      urlToImage: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+      publishedAt: new Date(Date.now() - 3600000 * 5).toISOString(),
       source: { name: "YugSatya Tech" },
       author: "Aravind Sharma"
     },
     {
-      title: "Global Supply Chain Transformations in the Post-Digital Era",
-      description: "A deep dive into how businesses are leveraging dynamic status mapping to optimize logistics and enhance employee communication.",
-      url: "#",
+      title: "How Dynamic Systems Support Sustainable City Infrastructure",
+      description: "A comprehensive analysis of real-time mapping systems and localized alerts to optimize public transport schedules.",
+      url: "https://newsapi.org",
       urlToImage: "https://images.unsplash.com/photo-1473968512647-3e447244af8f?auto=format&fit=crop&w=800&q=80",
-      publishedAt: new Date(Date.now() - 3600000 * 5).toISOString(),
-      source: { name: "Global Finance" },
-      author: "Elena Rostova"
-    },
-    {
-      title: "Exploring the Rise of Decentralized Media Networks",
-      description: "Why modern users are shifting toward secure, unified platforms that bundle direct messaging, high-fidelity calling, and verified news.",
-      url: "#",
-      urlToImage: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80",
-      publishedAt: new Date(Date.now() - 3600000 * 12).toISOString(),
-      source: { name: "Media Pulse" },
+      publishedAt: new Date(Date.now() - 3600000 * 8).toISOString(),
+      source: { name: "Urban Science" },
       author: "Marcus Vance"
     }
   ],
   technology: [
     {
-      title: "Unveiling WebRTC Audio Core Advancements",
-      description: "A comprehensive analysis of peer-to-peer audio scaling, adaptive noise suppression, and dynamic network optimization for mobile voice calling.",
-      url: "#",
+      title: "WebRTC Audio Core Advancements Reach Mobile Portals",
+      description: "A comprehensive analysis of peer-to-peer audio scaling, adaptive noise suppression, and real-time socket connections on mobile platforms.",
+      url: "https://newsapi.org",
       urlToImage: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80",
       publishedAt: new Date(Date.now() - 3600000 * 1).toISOString(),
       source: { name: "TechCrunch" },
       author: "Sidney Carter"
     },
     {
-      title: "Next.js 16 and the Evolution of Real-Time Frontends",
-      description: "How server-side rendering combined with active streaming hydration is accelerating public dashboards and decreasing bundle footprints.",
-      url: "#",
+      title: "React Server Components and the Future of Streaming Hydration",
+      description: "Why static landing pages and complex interactive directories are shifting toward hybrid rendering pipelines for instant load speeds.",
+      url: "https://newsapi.org",
       urlToImage: "https://images.unsplash.com/photo-1618477388954-7852f32655ec?auto=format&fit=crop&w=800&q=80",
       publishedAt: new Date(Date.now() - 3600000 * 4).toISOString(),
       source: { name: "Frontend Weekly" },
@@ -78,80 +75,97 @@ const CURATED_FALLBACK_NEWS: Record<string, Article[]> = {
   ],
   business: [
     {
-      title: "Unlocking Team Synergies in Enterprise Systems",
-      description: "How targeted communication layouts and centralized workspace dashboards directly enhance employee retention and workflow visibility.",
-      url: "#",
-      urlToImage: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
-      publishedAt: new Date(Date.now() - 3600000 * 8).toISOString(),
-      source: { name: "Enterprise Hub" },
-      author: "Robert Chen"
-    },
-    {
       title: "Fintech Startups Leverage Real-Time Socket Feeds",
-      description: "Why dynamic instant message updates are becoming core features inside digital banking and capital management portals.",
-      url: "#",
+      description: "Why immediate message updates and low-latency transaction alerts are becoming core components inside modern capital management platforms.",
+      url: "https://newsapi.org",
       urlToImage: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=800&q=80",
-      publishedAt: new Date(Date.now() - 3600000 * 24).toISOString(),
+      publishedAt: new Date(Date.now() - 3600000 * 3).toISOString(),
       source: { name: "FinTech World" },
       author: "Sophia Patel"
+    },
+    {
+      title: "Unlocking Team Synergies with Simplified Communication Dashboards",
+      description: "How corporate landing hubs and secure direct messaging interfaces directly impact workspace efficiency and organizational transparency.",
+      url: "https://newsapi.org",
+      urlToImage: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
+      publishedAt: new Date(Date.now() - 3600000 * 10).toISOString(),
+      source: { name: "Enterprise Hub" },
+      author: "Robert Chen"
     }
   ],
   science: [
     {
-      title: "Deep Space Telescope Discovers Atmospheric Water on Exo-Planet",
-      description: "Spectroscopic signatures confirm high-density atmospheric water vapor on a planet located 120 light years away, opening new astrobiology pathways.",
-      url: "#",
-      urlToImage: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80",
-      publishedAt: new Date(Date.now() - 3600000 * 18).toISOString(),
-      source: { name: "Nature Science" },
-      author: "Dr. Arthur Pendelton"
-    },
-    {
       title: "Quantum Computing Hardware Crosses 1000 Physical Qubits",
-      description: "Solid-state superconducting chips achieve high fidelity thresholds above 99.8%, signaling the arrival of early error-corrected quantum operations.",
-      url: "#",
+      description: "Superconducting chips achieve high-fidelity thresholds, paving the way for early error-corrected operations and chemical simulation breakthroughs.",
+      url: "https://newsapi.org",
       urlToImage: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=800&q=80",
-      publishedAt: new Date(Date.now() - 3600000 * 30).toISOString(),
+      publishedAt: new Date(Date.now() - 3600000 * 18).toISOString(),
       source: { name: "Quantum Labs" },
       author: "Sarah Jenkins"
+    },
+    {
+      title: "Deep Space Spectroscopic Discovery Reveals Water on Exo-Planet",
+      description: "Telescope signatures confirm atmospheric water vapor on a distant planet located in the habitable zone of a red dwarf star.",
+      url: "https://newsapi.org",
+      urlToImage: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80",
+      publishedAt: new Date(Date.now() - 3600000 * 26).toISOString(),
+      source: { name: "Nature Science" },
+      author: "Dr. Arthur Pendelton"
     }
   ]
 }
 
+const CATEGORIES = [
+  { id: 'general', label: 'All News' },
+  { id: 'technology', label: 'Technology' },
+  { id: 'business', label: 'Business' },
+  { id: 'science', label: 'Science' },
+  { id: 'sports', label: 'Sports' }
+]
+
 export default function App() {
   const [apiKey, setApiKey] = useState<string>(() => localStorage.getItem('news_api_key') || import.meta.env.VITE_NEWS_API_KEY || '')
+  const [showKeyInput, setShowKeyInput] = useState<boolean>(false)
   const [inputKey, setInputKey] = useState<string>('')
+  
   const [activeCategory, setActiveCategory] = useState<string>('general')
+  const [searchQuery, setSearchQuery] = useState<string>('')
+  const [debouncedQuery, setDebouncedQuery] = useState<string>('')
+  
   const [articles, setArticles] = useState<Article[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const [scrolled, setScrolled] = useState<boolean>(false)
 
-  // Track page scroll to style navigation header
+  // Track scroll state for nav glass effect
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setScrolled(true)
-      } else {
-        setScrolled(false)
-      }
+      setScrolled(window.scrollY > 20)
     }
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Fetch news articles dynamically
+  // Debounce search query to prevent constant API calls on every keystroke
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(searchQuery)
+    }, 600)
+    return () => clearTimeout(timer)
+  }, [searchQuery])
+
+  // Fetch news articles based on query or category
   useEffect(() => {
     const fetchNews = async () => {
       setIsLoading(true)
       setErrorMsg(null)
 
       if (!apiKey) {
-        // If no API Key is provided, seamlessly load our curated fallback database
+        // Load fallback cache if no API key is set
         setTimeout(() => {
           setArticles(CURATED_FALLBACK_NEWS[activeCategory] || CURATED_FALLBACK_NEWS['general'])
           setIsLoading(false)
-        }, 600)
+        }, 500)
         return
       }
 
@@ -159,30 +173,34 @@ export default function App() {
       const country = import.meta.env.VITE_NEWS_COUNTRY || 'us'
 
       try {
-        // Since NewsAPI blocks client-side requests on localhost/custom domains in free tiers due to CORS,
-        // we utilize a robust CORS Proxy bypass wrapper so that the user sees real-time, live news API data instantly!
-        const targetUrl = `${baseUrl}/top-headlines?category=${activeCategory === 'general' ? 'general' : activeCategory}&country=${country}&apiKey=${apiKey}`
-        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`
+        let targetUrl = ''
+        if (debouncedQuery.trim()) {
+          // Use 'everything' endpoint for search queries
+          targetUrl = `${baseUrl}/everything?q=${encodeURIComponent(debouncedQuery)}&language=en&sortBy=publishedAt&apiKey=${apiKey}`
+        } else {
+          // Use 'top-headlines' endpoint for standard categories
+          targetUrl = `${baseUrl}/top-headlines?category=${activeCategory === 'general' ? 'general' : activeCategory}&country=${country}&apiKey=${apiKey}`
+        }
 
+        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`
         const res = await fetch(proxyUrl)
+        
         if (!res.ok) throw new Error('API Request Limit Reached or Invalid Key')
         const data = await res.json()
 
-        if (data.status === 'ok' && data.articles && data.articles.length > 0) {
-          // Filter out deleted/empty articles
+        if (data.status === 'ok' && data.articles) {
           const validArticles = data.articles.filter((a: any) => a.title && a.title !== '[Removed]' && a.urlToImage)
           if (validArticles.length > 0) {
             setArticles(validArticles)
           } else {
-            // Fall back if no valid media articles are available
             setArticles(CURATED_FALLBACK_NEWS[activeCategory] || CURATED_FALLBACK_NEWS['general'])
           }
         } else {
           throw new Error(data.message || 'No articles returned')
         }
       } catch (err: any) {
-        console.warn('NewsAPI live fetch failed, utilizing curated cache layer:', err.message)
-        setErrorMsg('Live feed utilizing cached fallback due to CORS/API constraints. Enter a valid key to reload.')
+        console.warn('NewsAPI fetch failed, loading curated backup cache:', err.message)
+        setErrorMsg('Live feed rate-limited or key invalid. Utilizing cached headlines feed.')
         setArticles(CURATED_FALLBACK_NEWS[activeCategory] || CURATED_FALLBACK_NEWS['general'])
       } finally {
         setIsLoading(false)
@@ -190,7 +208,7 @@ export default function App() {
     }
 
     fetchNews()
-  }, [activeCategory, apiKey])
+  }, [activeCategory, debouncedQuery, apiKey])
 
   const handleSaveKey = (e: React.FormEvent) => {
     e.preventDefault()
@@ -198,6 +216,7 @@ export default function App() {
       localStorage.setItem('news_api_key', inputKey.trim())
       setApiKey(inputKey.trim())
       setInputKey('')
+      setShowKeyInput(false)
     }
   }
 
@@ -209,175 +228,149 @@ export default function App() {
 
   const formatDate = (dateStr: string) => {
     try {
-      const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', year: 'numeric' }
+      const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }
       return new Date(dateStr).toLocaleDateString('en-US', options)
     } catch {
       return dateStr
     }
   }
 
+  // Extract the first article to render as a majestic featured hero banner
+  const featuredArticle = articles[0]
+  const listArticles = articles.slice(1)
+
   return (
-    <div style={{ position: 'relative', minHeight: '100vh' }}>
-      {/* Background Decorative Radial Glows */}
+    <div style={{ position: 'relative', minHeight: '100vh', paddingBottom: '60px' }}>
+      {/* Visual background atmospheric elements */}
       <div className="bg-glow-1"></div>
       <div className="bg-glow-2"></div>
 
-      {/* Navigation Header */}
+      {/* Floating Header */}
       <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
         <div className="navbar-container">
           <a href="#" className="logo">
             <div className="logo-icon">
               <Newspaper className="w-5 h-5 text-white" />
             </div>
-            <span>Yug<span style={{ color: 'var(--accent-primary)' }}>Satya</span></span>
+            <span>Yug<span style={{ color: 'var(--accent-primary)' }}>Satya</span> News</span>
           </a>
 
-          <div className="nav-links">
-            <a href="#features" className="nav-link">Features</a>
-            <a href="#news" className="nav-link">Live News</a>
-            <a href="#download" className="nav-link">Download App</a>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <button 
+              onClick={() => setShowKeyInput(!showKeyInput)}
+              className="btn-secondary"
+              style={{ padding: '8px 14px', fontSize: '0.85rem', borderRadius: '12px' }}
+              title="Configure NewsAPI credentials"
+            >
+              <Key className="w-4 h-4 text-indigo-400" /> API Settings
+            </button>
             <a 
               href="https://test.yugsatya.com" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="btn-secondary"
+              className="btn-primary"
               style={{ padding: '8px 18px', fontSize: '0.85rem', borderRadius: '12px' }}
             >
-              Admin Login <ExternalLink className="w-3.5 h-3.5" />
+              Admin Portal <ExternalLink className="w-4 h-4" />
             </a>
           </div>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <header className="hero">
-        <div className="hero-badge animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <Sparkles className="w-4 h-4" /> The Future of Corporate News & Calls
-        </div>
-        
-        <h1 className="hero-title text-gradient text-glow animate-in fade-in slide-in-from-bottom-5 duration-700">
-          Your Unified Workspace Portal & Verified News Feed
-        </h1>
-        
-        <p className="hero-desc animate-in fade-in slide-in-from-bottom-6 duration-1000">
-          Get real-time news alerts, connect instantly with high-fidelity WebRTC group audio calls, and keep your corporate team aligned with interactive status updates.
-        </p>
-
-        <div className="hero-actions animate-in fade-in slide-in-from-bottom-8 duration-1000">
-          <a href="#download" className="btn-primary">
-            Get the Mobile App <Download className="w-4 h-4" />
-          </a>
-          <a href="#news" className="btn-secondary">
-            Explore Live News <ArrowRight className="w-4 h-4" />
-          </a>
-        </div>
-      </header>
-
-      {/* Feature Showcase Grid Section */}
-      <section id="features" className="news-section" style={{ paddingTop: '40px' }}>
-        <div className="section-header">
-          <h2 className="section-title text-gradient">Packed with Premium Capabilities</h2>
-          <p className="section-desc">Experience a state-of-the-art corporate portal designed to replace scattered communication tools.</p>
-        </div>
-
-        <div className="news-grid" style={{ marginBottom: '80px' }}>
-          {/* Feature 1 */}
-          <div className="glass-panel" style={{ padding: '32px' }}>
-            <div className="logo-icon" style={{ width: '48px', height: '48px', marginBottom: '20px' }}>
-              <PhoneCall className="w-6 h-6 text-white" />
+      {/* API Key Modal Panel */}
+      {showKeyInput && (
+        <div 
+          className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200"
+          onClick={() => setShowKeyInput(false)}
+        >
+          <div 
+            className="glass-panel api-key-panel w-full max-w-md animate-in zoom-in-95 duration-200"
+            onClick={e => e.stopPropagation()}
+            style={{ padding: '32px' }}
+          >
+            <div className="api-key-header" style={{ marginBottom: '16px' }}>
+              <Key className="w-6 h-6 text-indigo-400" />
+              <h3 style={{ fontSize: '1.2rem', fontWeight: 700 }}>News Connection API Key</h3>
             </div>
-            <h3 style={{ fontSize: '1.4rem', marginBottom: '12px' }}>WebRTC Group Calling</h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: '1.6' }}>
-              Host secure, low-latency, crystal-clear audio calls with your entire team. Start calls directly from group chat timelines with automated call-ringing states.
-            </p>
-          </div>
-
-          {/* Feature 2 */}
-          <div className="glass-panel" style={{ padding: '32px' }}>
-            <div className="logo-icon" style={{ width: '48px', height: '48px', marginBottom: '20px', background: 'linear-gradient(135deg, #a855f7 0%, #ec4899 100%)' }}>
-              <Layers className="w-6 h-6 text-white" />
-            </div>
-            <h3 style={{ fontSize: '1.4rem', marginBottom: '12px' }}>Multimedia Status Stories</h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: '1.6' }}>
-              Share interactive, full-screen stories with text, images, and videos. Seamless progress timers and gesture detection keep you instantly updated.
-            </p>
-          </div>
-
-          {/* Feature 3 */}
-          <div className="glass-panel" style={{ padding: '32px' }}>
-            <div className="logo-icon" style={{ width: '48px', height: '48px', marginBottom: '20px', background: 'linear-gradient(135deg, #3b82f6 0%, #6366f1 100%)' }}>
-              <Globe className="w-6 h-6 text-white" />
-            </div>
-            <h3 style={{ fontSize: '1.4rem', marginBottom: '12px' }}>Curated Live News</h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: '1.6' }}>
-              Stay ahead of the curve with verified, real-time news summaries fetched directly from leading global publishers, fully segmented into curated topics.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Dynamic News Feed Section */}
-      <section id="news" className="news-section" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.05)', paddingTop: '80px' }}>
-        <div className="section-header">
-          <div className="hero-badge" style={{ background: 'rgba(168, 85, 247, 0.1)', borderColor: 'rgba(168, 85, 247, 0.2)', color: '#c084fc' }}>
-            <TrendingUp className="w-4 h-4" /> Live Global Feed
-          </div>
-          <h2 className="section-title text-gradient">Browse Trending News</h2>
-          <p className="section-desc">Powered by dynamic real-time integrations. You can plug in your own API key to customize the categories.</p>
-        </div>
-
-        {/* API Key Panel */}
-        <div className="glass-panel api-key-panel">
-          <div className="api-key-header">
-            <Key className="w-5 h-5 text-indigo-400" />
-            <h4 style={{ fontSize: '1rem', fontWeight: 600 }}>Custom Live News Connection</h4>
-          </div>
-          {apiKey ? (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'between', width: '100%', gap: '12px' }}>
-              <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-                Active Session Key: <code style={{ color: '#818cf8', background: 'rgba(255,255,255,0.05)', padding: '3px 8px', borderRadius: '6px' }}>••••••••••••{apiKey.slice(-4)}</code>
+            
+            {apiKey ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+                  Your portal is active using key: <code style={{ color: '#818cf8', background: 'rgba(255,255,255,0.05)', padding: '3px 8px', borderRadius: '6px' }}>••••••••{apiKey.slice(-6)}</code>
+                </p>
+                <div style={{ display: 'flex', gap: '12px' }}>
+                  <button onClick={handleClearKey} className="btn-secondary" style={{ flex: 1, borderRadius: '12px' }}>
+                    Reset Credentials
+                  </button>
+                  <button onClick={() => setShowKeyInput(false)} className="btn-primary" style={{ flex: 1, borderRadius: '12px' }}>
+                    Done
+                  </button>
+                </div>
               </div>
-              <button onClick={handleClearKey} className="btn-secondary" style={{ padding: '8px 16px', fontSize: '0.8rem', borderRadius: '10px' }}>
-                Reset Key
-              </button>
-            </div>
-          ) : (
-            <form onSubmit={handleSaveKey} className="api-key-input-container">
-              <input 
-                type="password" 
-                placeholder="Enter NewsAPI.org API Key"
-                value={inputKey}
-                onChange={e => setInputKey(e.target.value)}
-                className="api-key-input"
-              />
-              <button type="submit" className="api-key-btn">
-                Connect
-              </button>
-            </form>
-          )}
-          {!apiKey && (
-            <p style={{ fontSize: '0.78rem', color: 'var(--text-tertiary)', lineHeight: '1.4' }}>
-              *No key? No problem! The portal runs on a premium fallback cache of verified news articles, letting you preview the high-fidelity news layout immediately.
-            </p>
-          )}
+            ) : (
+              <form onSubmit={handleSaveKey} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+                  Enter your credentials from <a href="https://newsapi.org" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)', textDecoration: 'underline' }}>newsapi.org</a> to sync a live headlines feed.
+                </p>
+                <input 
+                  type="password" 
+                  placeholder="Paste NewsAPI API Key"
+                  value={inputKey}
+                  onChange={e => setInputKey(e.target.value)}
+                  className="api-key-input"
+                  required
+                />
+                <div style={{ display: 'flex', gap: '12px' }}>
+                  <button type="button" onClick={() => setShowKeyInput(false)} className="btn-secondary" style={{ flex: 1, borderRadius: '12px' }}>
+                    Cancel
+                  </button>
+                  <button type="submit" className="btn-primary" style={{ flex: 1, borderRadius: '12px' }}>
+                    Save & Load
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
         </div>
+      )}
 
-        {/* Categories Selector */}
-        <div className="filter-bar">
-          {['general', 'technology', 'business', 'science'].map(cat => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`filter-btn ${activeCategory === cat ? 'active' : ''}`}
-              style={{ textTransform: 'capitalize' }}
-            >
-              {cat}
-            </button>
-          ))}
+      {/* Main News Portal Container */}
+      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '120px 24px 40px', position: 'relative', zIndex: 10 }}>
+        
+        {/* Dynamic Category Nav & Real-Time Search Bar */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '20px', marginBottom: '40px', flexWrap: 'wrap' }}>
+          {/* Categories Selector */}
+          <div className="filter-bar" style={{ margin: 0 }}>
+            {CATEGORIES.map(cat => (
+              <button
+                key={cat.id}
+                onClick={() => {
+                  setActiveCategory(cat.id)
+                  setSearchQuery('')
+                  setDebouncedQuery('')
+                }}
+                className={`filter-btn ${activeCategory === cat.id && !searchQuery ? 'active' : ''}`}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Real-time Search Box */}
+          <div className="glass-panel" style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '6px 14px', borderRadius: '14px', maxWidth: '320px', width: '100%', borderColor: 'rgba(255,255,255,0.06)' }}>
+            <Search className="w-4 h-4 text-slate-500" />
+            <input 
+              type="text" 
+              placeholder="Search news database..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              style={{ background: 'none', border: 'none', color: 'var(--text-primary)', outline: 'none', fontSize: '0.9rem', width: '100%' }}
+            />
+          </div>
         </div>
 
         {errorMsg && (
-          <div className="glass-panel" style={{ padding: '12px 20px', maxWidth: '600px', margin: '0 auto 30px', display: 'flex', alignItems: 'center', gap: '10px', borderColor: 'rgba(234, 179, 8, 0.2)', background: 'rgba(234, 179, 8, 0.03)' }}>
+          <div className="glass-panel" style={{ padding: '12px 20px', display: 'flex', alignItems: 'center', gap: '10px', borderColor: 'rgba(234, 179, 8, 0.2)', background: 'rgba(234, 179, 8, 0.03)', marginBottom: '30px' }}>
             <AlertCircle className="w-5 h-5 text-yellow-500" />
             <span style={{ fontSize: '0.85rem', color: '#fef08a' }}>{errorMsg}</span>
           </div>
@@ -385,107 +378,139 @@ export default function App() {
 
         {/* Loading Spinner */}
         {isLoading ? (
-          <div className="loading-container">
+          <div className="loading-container" style={{ minHeight: '50vh' }}>
             <div className="spinner"></div>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Retrieving live stories...</p>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Syncing verified live articles...</p>
           </div>
         ) : (
-          <div className="news-grid">
-            {articles.map((art, index) => (
-              <div key={index} className="glass-panel news-card">
-                <div className="news-card-image-wrapper">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '48px' }}>
+            
+            {/* 1. Large Breaking/Featured News Banner */}
+            {featuredArticle && !searchQuery && (
+              <div 
+                className="glass-panel" 
+                style={{ 
+                  display: 'flex', 
+                  flexDirection: 'row', 
+                  overflow: 'hidden', 
+                  minHeight: '420px', 
+                  borderRadius: '28px',
+                  cursor: 'pointer'
+                }}
+                onClick={() => window.open(featuredArticle.url, '_blank')}
+              >
+                {/* Visual Side Banner Image */}
+                <div style={{ flex: 1.2, position: 'relative', overflow: 'hidden', minHeight: '300px', background: 'var(--bg-tertiary)' }}>
                   <img 
-                    src={art.urlToImage || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80'} 
-                    alt={art.title} 
-                    className="news-card-image"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80'
-                    }}
+                    src={featuredArticle.urlToImage || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=80'} 
+                    alt={featuredArticle.title} 
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
-                  <div className="news-card-badge">{art.source.name}</div>
+                  <div className="news-card-badge" style={{ position: 'absolute', top: '24px', left: '24px' }}>
+                    🚨 FEATURED STORY
+                  </div>
                 </div>
 
-                <div className="news-card-content">
+                {/* Banner Content Details */}
+                <div style={{ flex: 1, padding: '40px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                   <div>
-                    <div className="news-card-meta">
-                      <span><Calendar className="w-3.5 h-3.5" /> {formatDate(art.publishedAt)}</span>
-                      {art.author && <span style={{ maxWidth: '120px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>• By {art.author}</span>}
+                    <div className="news-card-meta" style={{ marginBottom: '16px' }}>
+                      <span><Calendar className="w-3.5 h-3.5" /> {formatDate(featuredArticle.publishedAt)}</span>
+                      <span>• {featuredArticle.source.name}</span>
                     </div>
+
+                    <h2 style={{ fontSize: 'clamp(1.5rem, 2.5vw, 2.2rem)', lineHeight: 1.2, marginBottom: '16px', color: 'var(--text-primary)' }}>
+                      {featuredArticle.title}
+                    </h2>
                     
-                    <h3 className="news-card-title">{art.title}</h3>
-                    <p className="news-card-desc">{art.description}</p>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', lineHeight: 1.6, marginBottom: '24px' }}>
+                      {featuredArticle.description}
+                    </p>
                   </div>
 
-                  <div className="news-card-footer">
-                    <span className="news-card-author">
-                      Source: {art.source.name}
-                    </span>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '20px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+                      <User className="w-4 h-4 text-indigo-400" /> By {featuredArticle.author || featuredArticle.source.name}
+                    </div>
                     <a 
-                      href={art.url} 
+                      href={featuredArticle.url} 
                       target="_blank" 
                       rel="noopener noreferrer" 
                       className="news-card-link"
+                      onClick={e => e.stopPropagation()}
                     >
-                      Read Story <ExternalLink className="w-3.5 h-3.5" />
+                      Read Full Coverage <LinkIcon className="w-4 h-4" />
                     </a>
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
-        )}
-      </section>
+            )}
 
-      {/* Download APK Section */}
-      <section id="download" className="news-section" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.05)', padding: '100px 24px', textAlign: 'center' }}>
-        <div className="glass-panel" style={{ maxWidth: '800px', margin: '0 auto', padding: '60px 40px', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', top: '-20%', right: '-20%', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, rgba(0,0,0,0) 70%)', filter: 'blur(40px)', zIndex: 0 }}></div>
-          
-          <div style={{ position: 'relative', zIndex: 10 }}>
-            <div className="logo-icon" style={{ width: '56px', height: '56px', margin: '0 auto 24px' }}>
-              <Download className="w-6 h-6 text-white" />
-            </div>
-            
-            <h2 className="section-title text-gradient" style={{ marginBottom: '16px' }}>Get the Mobile Application</h2>
-            <p className="section-desc" style={{ marginBottom: '32px', maxWidth: '550px' }}>
-              Download our fully optimized, high-fidelity corporate Android APK. Built with WebRTC calling, real-time dynamic sync, and interactive statuses.
-            </p>
+            {/* 2. Grid of Articles */}
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '24px' }}>
+                <TrendingUp className="w-5 h-5 text-indigo-400" />
+                <h3 style={{ fontSize: '1.4rem', fontWeight: 700 }}>
+                  {debouncedQuery ? `Search Results for "${debouncedQuery}"` : 'Trending Coverage'}
+                </h3>
+              </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
-              <a 
-                href="https://test.yugsatya.com/downloads/app-profile.apk" 
-                className="btn-primary"
-                style={{ fontSize: '1.05rem', padding: '16px 36px' }}
-              >
-                Download Android APK (106.4 MB) <Download className="w-5 h-5" />
-              </a>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-tertiary)', fontSize: '0.8rem' }}>
-                <Shield className="w-4 h-4 text-green-500" /> Secure Download • Verified AOT Compiled Profile Build
+              <div className="news-grid">
+                {(searchQuery ? articles : listArticles).map((art, index) => (
+                  <div key={index} className="glass-panel news-card">
+                    <div className="news-card-image-wrapper">
+                      <img 
+                        src={art.urlToImage || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80'} 
+                        alt={art.title} 
+                        className="news-card-image"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80'
+                        }}
+                      />
+                      <div className="news-card-badge">{art.source.name}</div>
+                    </div>
+
+                    <div className="news-card-content">
+                      <div>
+                        <div className="news-card-meta">
+                          <span><Calendar className="w-3.5 h-3.5" /> {formatDate(art.publishedAt)}</span>
+                        </div>
+                        
+                        <h3 className="news-card-title">{art.title}</h3>
+                        <p className="news-card-desc">{art.description}</p>
+                      </div>
+
+                      <div className="news-card-footer">
+                        <span className="news-card-author">
+                          Source: {art.source.name}
+                        </span>
+                        <a 
+                          href={art.url} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="news-card-link"
+                        >
+                          Read Story <LinkIcon className="w-3.5 h-3.5" />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Footer */}
-      <footer className="footer">
+          </div>
+        )}
+      </main>
+
+      {/* Simplified, elegant news footer */}
+      <footer className="footer" style={{ border: 'none', background: 'none', marginTop: '40px', padding: '40px 24px 0' }}>
         <div className="footer-container">
-          <a href="#" className="logo">
-            <div className="logo-icon">
-              <Newspaper className="w-5 h-5 text-white" />
-            </div>
-            <span>Yug<span style={{ color: 'var(--accent-primary)' }}>Satya</span></span>
-          </a>
-
-          <div className="footer-nav">
-            <a href="#features" className="footer-nav-link">Features</a>
-            <a href="#news" className="footer-nav-link">Live News Feed</a>
-            <a href="#download" className="footer-nav-link">Install App</a>
-            <a href="https://test.yugsatya.com" target="_blank" rel="noopener noreferrer" className="footer-nav-link">Admin Portal</a>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+            <Shield className="w-4 h-4 text-green-500" /> Secured dynamic socket feed powered by NewsAPI • Decoupled CDN hosting
           </div>
-
-          <p className="copyright">
-            &copy; {new Date().getFullYear()} YugSatya Corporation. All rights reserved. Designed with premium dark-space glassmorphism.
+          <p className="copyright" style={{ marginTop: '10px' }}>
+            &copy; {new Date().getFullYear()} YugSatya News. All rights reserved.
           </p>
         </div>
       </footer>
