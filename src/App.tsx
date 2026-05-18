@@ -119,7 +119,7 @@ const CURATED_FALLBACK_NEWS: Record<string, Article[]> = {
 }
 
 export default function App() {
-  const [apiKey, setApiKey] = useState<string>(() => localStorage.getItem('news_api_key') || '')
+  const [apiKey, setApiKey] = useState<string>(() => localStorage.getItem('news_api_key') || import.meta.env.VITE_NEWS_API_KEY || '')
   const [inputKey, setInputKey] = useState<string>('')
   const [activeCategory, setActiveCategory] = useState<string>('general')
   const [articles, setArticles] = useState<Article[]>([])
@@ -155,10 +155,13 @@ export default function App() {
         return
       }
 
+      const baseUrl = import.meta.env.VITE_NEWS_BASE_URL || 'https://newsapi.org/v2'
+      const country = import.meta.env.VITE_NEWS_COUNTRY || 'us'
+
       try {
         // Since NewsAPI blocks client-side requests on localhost/custom domains in free tiers due to CORS,
         // we utilize a robust CORS Proxy bypass wrapper so that the user sees real-time, live news API data instantly!
-        const targetUrl = `https://newsapi.org/v2/top-headlines?category=${activeCategory === 'general' ? 'general' : activeCategory}&country=us&apiKey=${apiKey}`
+        const targetUrl = `${baseUrl}/top-headlines?category=${activeCategory === 'general' ? 'general' : activeCategory}&country=${country}&apiKey=${apiKey}`
         const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`
 
         const res = await fetch(proxyUrl)
