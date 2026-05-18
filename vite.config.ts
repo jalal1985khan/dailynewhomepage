@@ -6,6 +6,12 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 3005,
-    strictPort: false
+    strictPort: false,
+    allowedHosts: ['yugsatya.com', 'www.yugsatya.com', 'localhost']
+  },
+  preview: {
+    port: 3005,
+    strictPort: false,
+    allowedHosts: ['yugsatya.com', 'www.yugsatya.com', 'localhost']
   }
 })
