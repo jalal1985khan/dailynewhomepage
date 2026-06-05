@@ -1,15 +1,14 @@
 import { useState, useEffect } from 'react'
-import { 
-   Newspaper, 
-   Calendar, 
-   Shield,
-   TrendingUp,
-   AlertCircle,
-   Search,
-   User,
-   ArrowLeft,
-   BookOpen,
-   ExternalLink as LinkIcon
+import {
+  Calendar,
+  Shield,
+  TrendingUp,
+  AlertCircle,
+  Search,
+  User,
+  ArrowLeft,
+  BookOpen,
+  ExternalLink as LinkIcon
 } from 'lucide-react'
 
 interface Article {
@@ -131,7 +130,7 @@ export default function App() {
   const [activeCategory, setActiveCategory] = useState<string>('general')
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [debouncedQuery, setDebouncedQuery] = useState<string>('')
-  
+
   const [articles, setArticles] = useState<Article[]>([])
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -182,7 +181,7 @@ export default function App() {
 
         const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`
         const res = await fetch(proxyUrl)
-        
+
         if (!res.ok) throw new Error('API Request Limit Reached or Invalid Key')
         const data = await res.json()
 
@@ -240,22 +239,19 @@ export default function App() {
       <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
         <div className="navbar-container">
           <a href="#" className="logo" onClick={() => setSelectedArticle(null)}>
-            <div className="logo-icon">
-              <Newspaper className="w-5 h-5 text-white" />
-            </div>
-            <span>Yug<span style={{ color: 'var(--accent-primary)' }}>Satya</span> News</span>
+            <img src="/logo.png" alt="YUG SATYA NEWS" style={{ height: '40px', width: 'auto', objectFit: 'contain' }} />
           </a>
         </div>
       </nav>
 
       {/* Main News Portal Container */}
       <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '120px 24px 40px', position: 'relative', zIndex: 10 }}>
-        
+
         {selectedArticle ? (
           /* Dedicated Internal Article Reader View */
           <div className="animate-in fade-in slide-in-from-bottom-5 duration-300">
             {/* Back Button */}
-            <button 
+            <button
               onClick={() => {
                 setSelectedArticle(null)
                 window.scrollTo(0, 0)
@@ -270,9 +266,9 @@ export default function App() {
             <div className="glass-panel" style={{ overflow: 'hidden', borderRadius: '28px', padding: '0 0 40px' }}>
               {/* Massive Banner Image */}
               <div style={{ height: '480px', position: 'relative', overflow: 'hidden', background: 'var(--bg-tertiary)' }}>
-                <img 
-                  src={selectedArticle.urlToImage || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=80'} 
-                  alt={selectedArticle.title} 
+                <img
+                  src={selectedArticle.urlToImage || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=80'}
+                  alt={selectedArticle.title}
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
                 <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, var(--bg-primary) 0%, rgba(3,0,20,0.4) 60%, rgba(3,0,20,0.1) 100%)' }}></div>
@@ -313,10 +309,10 @@ export default function App() {
                     <h4 style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-primary)' }}>Want to explore the syndicated source?</h4>
                     <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '4px' }}>Visit the original publisher's website to view full editorial assets.</p>
                   </div>
-                  <a 
-                    href={selectedArticle.url} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
+                  <a
+                    href={selectedArticle.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="btn-secondary"
                     style={{ padding: '10px 20px', fontSize: '0.85rem', borderRadius: '10px' }}
                   >
@@ -351,8 +347,8 @@ export default function App() {
               {/* Real-time Search Box */}
               <div className="glass-panel" style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '6px 14px', borderRadius: '14px', maxWidth: '320px', width: '100%', borderColor: 'rgba(255,255,255,0.06)' }}>
                 <Search className="w-4 h-4 text-slate-500" />
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   placeholder="Search news database..."
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
@@ -361,12 +357,12 @@ export default function App() {
               </div>
             </div>
 
-            {errorMsg && (
+            {/* {errorMsg && (
               <div className="glass-panel" style={{ padding: '12px 20px', display: 'flex', alignItems: 'center', gap: '10px', borderColor: 'rgba(234, 179, 8, 0.2)', background: 'rgba(234, 179, 8, 0.03)', marginBottom: '30px' }}>
                 <AlertCircle className="w-5 h-5 text-yellow-500" />
                 <span style={{ fontSize: '0.85rem', color: '#fef08a' }}>{errorMsg}</span>
               </div>
-            )}
+            )} */}
 
             {/* Loading Spinner */}
             {isLoading ? (
@@ -376,16 +372,16 @@ export default function App() {
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '48px' }}>
-                
+
                 {/* 1. Large Breaking/Featured News Banner */}
                 {featuredArticle && !searchQuery && (
-                  <div 
-                    className="glass-panel" 
-                    style={{ 
-                      display: 'flex', 
-                      flexDirection: 'row', 
-                      overflow: 'hidden', 
-                      minHeight: '420px', 
+                  <div
+                    className="glass-panel"
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      overflow: 'hidden',
+                      minHeight: '420px',
                       borderRadius: '28px',
                       cursor: 'pointer'
                     }}
@@ -396,9 +392,9 @@ export default function App() {
                   >
                     {/* Visual Side Banner Image */}
                     <div style={{ flex: 1.2, position: 'relative', overflow: 'hidden', minHeight: '300px', background: 'var(--bg-tertiary)' }}>
-                      <img 
-                        src={featuredArticle.urlToImage || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=80'} 
-                        alt={featuredArticle.title} 
+                      <img
+                        src={featuredArticle.urlToImage || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=80'}
+                        alt={featuredArticle.title}
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       />
                       <div className="news-card-badge" style={{ position: 'absolute', top: '24px', left: '24px' }}>
@@ -417,7 +413,7 @@ export default function App() {
                         <h2 style={{ fontSize: 'clamp(1.4rem, 2.2vw, 2rem)', lineHeight: 1.2, marginBottom: '16px', color: 'var(--text-primary)' }}>
                           {featuredArticle.title}
                         </h2>
-                        
+
                         <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '24px' }}>
                           {featuredArticle.description}
                         </p>
@@ -427,8 +423,8 @@ export default function App() {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
                           <User className="w-4 h-4 text-indigo-400" /> By {featuredArticle.author || featuredArticle.source.name}
                         </div>
-                        <a 
-                          href="#" 
+                        <a
+                          href="#"
                           className="news-card-link"
                           onClick={e => {
                             e.preventDefault()
@@ -455,8 +451,8 @@ export default function App() {
 
                   <div className="news-grid">
                     {(searchQuery ? articles : listArticles).map((art, index) => (
-                      <div 
-                        key={index} 
+                      <div
+                        key={index}
                         className="glass-panel news-card"
                         style={{ cursor: 'pointer' }}
                         onClick={() => {
@@ -465,9 +461,9 @@ export default function App() {
                         }}
                       >
                         <div className="news-card-image-wrapper">
-                          <img 
-                            src={art.urlToImage || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80'} 
-                            alt={art.title} 
+                          <img
+                            src={art.urlToImage || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80'}
+                            alt={art.title}
                             className="news-card-image"
                             onError={(e) => {
                               (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80'
@@ -481,7 +477,7 @@ export default function App() {
                             <div className="news-card-meta">
                               <span><Calendar className="w-3.5 h-3.5" /> {formatDate(art.publishedAt)}</span>
                             </div>
-                            
+
                             <h3 className="news-card-title">{art.title}</h3>
                             <p className="news-card-desc">{art.description}</p>
                           </div>
@@ -490,8 +486,8 @@ export default function App() {
                             <span className="news-card-author">
                               Source: {art.source.name}
                             </span>
-                            <a 
-                              href="#" 
+                            <a
+                              href="#"
                               className="news-card-link"
                               onClick={e => {
                                 e.preventDefault()
