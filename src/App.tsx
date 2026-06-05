@@ -178,6 +178,23 @@ export default function App() {
           targetUrl = `${BASE_URL}/top-headlines?category=${activeCategory === 'general' ? 'general' : activeCategory}&country=${COUNTRY}&apiKey=${API_KEY}`
         }
 
+        const cacheKey = `news_cache_${activeCategory}_${debouncedQuery}`
+        const cachedDataStr = localStorage.getItem(cacheKey)
+        
+        if (cachedDataStr) {
+          try {
+            const cachedData = JSON.parse(cachedDataStr)
+            const CACHE_EXPIRATION_MS = 15 * 60 * 1000 // 15 minutes
+            if (Date.now() - cachedData.timestamp < CACHE_EXPIRATION_MS) {
+              setArticles(cachedData.articles)
+              setIsLoading(false)
+              return
+            }
+          } catch (e) {
+            // Ignore parse errors
+          }
+        }
+
         const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`
         const res = await fetch(proxyUrl)
 
@@ -188,6 +205,10 @@ export default function App() {
           const validArticles = data.articles.filter((a: any) => a.title && a.title !== '[Removed]' && a.urlToImage)
           if (validArticles.length > 0) {
             setArticles(validArticles)
+            localStorage.setItem(cacheKey, JSON.stringify({
+              timestamp: Date.now(),
+              articles: validArticles
+            }))
           } else {
             setArticles(CURATED_FALLBACK_NEWS[activeCategory] || CURATED_FALLBACK_NEWS['general'])
           }
@@ -303,7 +324,7 @@ export default function App() {
                 ))}
 
                 {/* External Source Link */}
-                <div style={{ marginTop: '24px', padding: '24px', borderRadius: '16px', background: 'rgba(255,255,255,0.01)', border: '1px dashed var(--border-glass)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+                {/* <div style={{ marginTop: '24px', padding: '24px', borderRadius: '16px', background: 'rgba(255,255,255,0.01)', border: '1px dashed var(--border-glass)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
                   <div>
                     <h4 style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-primary)' }}>Want to explore the syndicated source?</h4>
                     <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '4px' }}>Visit the original publisher's website to view full editorial assets.</p>
@@ -317,7 +338,7 @@ export default function App() {
                   >
                     Visit {selectedArticle.source.name} <LinkIcon className="w-4 h-4" />
                   </a>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
