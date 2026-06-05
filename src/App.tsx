@@ -3,7 +3,6 @@ import {
   Calendar,
   Shield,
   TrendingUp,
-  AlertCircle,
   Search,
   User,
   ArrowLeft,
@@ -134,7 +133,7 @@ export default function App() {
   const [articles, setArticles] = useState<Article[]>([])
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  const [_errorMsg, setErrorMsg] = useState<string | null>(null)
   const [scrolled, setScrolled] = useState<boolean>(false)
 
   // Track scroll state for nav glass effect
