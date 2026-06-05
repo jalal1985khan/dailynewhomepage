@@ -180,7 +180,7 @@ export default function App() {
 
         const cacheKey = `news_cache_${activeCategory}_${debouncedQuery}`
         const cachedDataStr = localStorage.getItem(cacheKey)
-        
+
         if (cachedDataStr) {
           try {
             const cachedData = JSON.parse(cachedDataStr)
@@ -316,9 +316,9 @@ export default function App() {
               </div>
 
               {/* Article Content Body */}
-              <div style={{ padding: '40px 40px', maxWidth: '800px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              <div style={{ padding: '40px 40px', maxWidth: '800px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '24px' }} className='text-indigo-400'>
                 {generateParagraphs(selectedArticle.title, selectedArticle.description, selectedArticle.source.name).map((p, idx) => (
-                  <p key={idx} style={{ fontSize: '1.08rem', color: '#e2e8f0', lineHeight: 1.8, fontWeight: 400 }}>
+                  <p key={idx} style={{ fontSize: '1.08rem', lineHeight: 1.8, fontWeight: 400 }}>
                     {p}
                   </p>
                 ))}
