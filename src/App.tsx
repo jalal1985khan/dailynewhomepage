@@ -195,7 +195,9 @@ export default function App() {
           }
         }
 
-        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`
+        // Support custom backend URL via Vite ENV variables, fallback to standard localhost
+        const backendBaseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000'
+        const proxyUrl = `${backendBaseUrl}/api/news?url=${encodeURIComponent(targetUrl)}`
         const res = await fetch(proxyUrl)
 
         if (!res.ok) throw new Error('API Request Limit Reached or Invalid Key')
