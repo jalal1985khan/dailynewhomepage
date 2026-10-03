@@ -12,7 +12,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://yugsatya.com'),
+  metadataBase: new URL('https://www.yugsatya.com'),
   title: {
     default: 'YugSatya | Global News Publication & Investigative Journalism',
     template: '%s | YugSatya News',
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   description:
     'YugSatya is an independent global news publication providing verified 24/7 breaking news, macroeconomic analysis, frontier technology reporting, and in-depth investigations.',
   applicationName: 'YugSatya News',
-  authors: [{ name: 'YugSatya Editorial Board', url: 'https://yugsatya.com' }],
+  authors: [{ name: 'YugSatya Editorial Board', url: 'https://www.yugsatya.com' }],
   generator: 'Next.js',
   keywords: [
     'news',
@@ -46,12 +46,12 @@ export const metadata: Metadata = {
     telephone: false,
   },
   alternates: {
-    canonical: 'https://yugsatya.com',
+    canonical: 'https://www.yugsatya.com',
   },
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://yugsatya.com',
+    url: 'https://www.yugsatya.com',
     siteName: 'YugSatya News',
     title: 'YugSatya | Global News Publication & Investigative Journalism',
     description:
@@ -106,10 +106,10 @@ export default function RootLayout({
     '@type': 'NewsMediaOrganization',
     name: 'YugSatya News',
     legalName: 'YugSatya Media Network Inc.',
-    url: 'https://yugsatya.com',
+    url: 'https://www.yugsatya.com',
     logo: {
       '@type': 'ImageObject',
-      url: 'https://yugsatya.com/logo.png',
+      url: 'https://www.yugsatya.com/logo.png',
       width: 600,
       height: 120,
     },
@@ -118,10 +118,10 @@ export default function RootLayout({
       'https://facebook.com/YugSatyaNews',
       'https://linkedin.com/company/yugsatya',
     ],
-    publishingPrinciples: 'https://yugsatya.com/standards',
-    ethicsPolicy: 'https://yugsatya.com/ethics',
-    correctionsPolicy: 'https://yugsatya.com/corrections',
-    diversityPolicy: 'https://yugsatya.com/diversity',
+    publishingPrinciples: 'https://www.yugsatya.com/standards',
+    ethicsPolicy: 'https://www.yugsatya.com/ethics',
+    correctionsPolicy: 'https://www.yugsatya.com/corrections',
+    diversityPolicy: 'https://www.yugsatya.com/diversity',
     foundingDate: '2024',
     knowsAbout: [
       'Breaking News',

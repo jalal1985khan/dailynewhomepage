@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { CATEGORIES } from '@/lib/constants';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yugsatya.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.yugsatya.com';
   const currentDate = new Date().toISOString();
 
   const categoryEntries = CATEGORIES.map((cat) => ({

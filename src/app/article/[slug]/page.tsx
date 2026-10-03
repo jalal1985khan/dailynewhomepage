@@ -13,8 +13,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const title = article ? article.title : decodedSlug.replace(/-/g, ' ');
   const description = article?.description || 'Read the full verified investigative report on YugSatya News.';
-  const imageUrl = article?.urlToImage || 'https://yugsatya.com/logo.png';
-  const canonicalUrl = `https://yugsatya.com/article/${encodeURIComponent(slug)}`;
+  const imageUrl = article?.urlToImage || 'https://www.yugsatya.com/logo.png';
+  const canonicalUrl = `https://www.yugsatya.com/article/${encodeURIComponent(slug)}`;
 
   return {
     title,

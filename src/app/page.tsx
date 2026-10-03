@@ -122,7 +122,7 @@ export default function HomePage() {
       '@type': 'NewsArticle',
       headline: leadArticle.title,
       description: leadArticle.description,
-      image: [leadArticle.urlToImage || 'https://yugsatya.com/logo.png'],
+      image: [leadArticle.urlToImage || 'https://www.yugsatya.com/logo.png'],
       datePublished: leadArticle.publishedAt,
       dateModified: leadArticle.publishedAt,
       author: [
@@ -136,7 +136,7 @@ export default function HomePage() {
         name: 'YugSatya News',
         logo: {
           '@type': 'ImageObject',
-          url: 'https://yugsatya.com/logo.png',
+          url: 'https://www.yugsatya.com/logo.png',
         },
       },
     }

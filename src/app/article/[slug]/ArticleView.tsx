@@ -73,7 +73,7 @@ export default function ArticleView({ slug, initialArticle }: ArticleViewProps) 
         title: titleFromSlug,
         description: `Verified dispatch and investigative coverage regarding ${titleFromSlug}. Full editorial documentation and updates.`,
         content: `Comprehensive analysis and developments regarding "${titleFromSlug}".`,
-        url: 'https://yugsatya.com',
+        url: 'https://www.yugsatya.com',
         urlToImage: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=80',
         publishedAt: new Date().toISOString(),
         source: { name: 'YugSatya Global Wire' },
@@ -144,7 +144,7 @@ export default function ArticleView({ slug, initialArticle }: ArticleViewProps) 
     `Looking forward, stakeholders from both public and private sectors are preparing formal whitepapers and implementation guidelines. Continued forensic reporting will be essential as verified metrics emerge over the coming financial quarters.`
   ];
 
-  const shareUrl = typeof window !== 'undefined' ? window.location.href : 'https://yugsatya.com';
+  const shareUrl = typeof window !== 'undefined' ? window.location.href : 'https://www.yugsatya.com';
   const twitterShare = `https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(shareUrl)}`;
   const linkedinShare = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
 
@@ -154,7 +154,7 @@ export default function ArticleView({ slug, initialArticle }: ArticleViewProps) 
     '@type': 'NewsArticle',
     headline: article.title,
     description: article.description,
-    image: [article.urlToImage || 'https://yugsatya.com/logo.png'],
+    image: [article.urlToImage || 'https://www.yugsatya.com/logo.png'],
     datePublished: article.publishedAt,
     dateModified: article.publishedAt,
     author: [
@@ -168,7 +168,7 @@ export default function ArticleView({ slug, initialArticle }: ArticleViewProps) 
       name: 'YugSatya News',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://yugsatya.com/logo.png',
+        url: 'https://www.yugsatya.com/logo.png',
       },
     },
   };
